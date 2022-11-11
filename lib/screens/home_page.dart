@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ui_project/screens/property_screen.dart';
 import 'package:ui_project/widgets/card_industral_land.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../services.dart';
 import '../widgets/office_card.dart';
@@ -196,15 +197,36 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(height: size.height*.02,),
-            Container(
-              height: size.height * .22,
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: size.width*.025),
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                itemBuilder: (context, index) => OfficeCard(),
-                separatorBuilder: (context, index) => SizedBox(width: size.width*.02,),
-              ),
+            SizedBox(height: size.height * .225,
+              width: double.infinity,
+              child: FutureBuilder(
+                future: Services.getData(),
+                builder: (context, snapshot) {
+                if(snapshot.connectionState==ConnectionState.waiting){
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      height: size.height * .225,
+                      width: size.width * .48,
+                      color: Colors.white,
+                    ),
+                  );
+                }else if(snapshot.hasError){
+                  return Text(snapshot.error.toString());
+                }else{
+                  return Container(
+                    height: size.height * .225,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: size.width*.025),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) => OfficeCard(images: snapshot.data[index].images.toString(),officeName: snapshot.data[index].propertyType,location: snapshot.data[index].location),
+                      separatorBuilder: (context, index) => SizedBox(width: size.width*.02,),
+                    ),
+                  );
+                }
+              },),
             ),
             SizedBox(height: size.height * .03),
             Padding(
@@ -228,16 +250,16 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(height: size.height*.02,),
-            Container(
-              height: size.height * .22,
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: size.width*.025),
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                itemBuilder: (context, index) => OfficeCard(),
-                separatorBuilder: (context, index) => SizedBox(width: size.width*.02,),
-              ),
-            ),
+            // Container(
+            //   height: size.height * .22,
+            //   child: ListView.separated(
+            //     padding: EdgeInsets.symmetric(horizontal: size.width*.025),
+            //     scrollDirection: Axis.horizontal,
+            //     itemCount: 3,
+            //     itemBuilder: (context, index) => OfficeCard(),
+            //     separatorBuilder: (context, index) => SizedBox(width: size.width*.02,),
+            //   ),
+            // ),
 
           ],
         ),

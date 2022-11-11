@@ -12,7 +12,7 @@ class Services{
     print('.............................................');
     List<Property> properties =[];
     // print(a["name"]);
-    var a=(jsonDecode(jsonData[0]['propertyType']))["name"];
+    // var a=(jsonDecode(jsonData[0]['propertyType']))["name"];
     // print(a);
     for(var u in jsonData){
       var propertyType=(jsonDecode(u['propertyType']))["name"];
@@ -22,13 +22,12 @@ class Services{
       location.add((jsonDecode(u['location']))["city"]);
       location.add((jsonDecode(u['location']))["locality"]);
       location.add((jsonDecode(u['location']))["street"]);
+      location.add((((jsonDecode(u['location']))["cord"])["location"])["lat"]);
+      location.add((((jsonDecode(u['location']))["cord"])["location"])["lng"]);
 
       var details=(jsonDecode(u['details']))["title"];
       var priceRange=(jsonDecode(u['priceRange']))["start"];
       var images=(jsonDecode(u['images']))[0];
-
-      // print(a);
-
       Property property=Property(propertyType, transactionType, location, details, priceRange, images);
       properties.add(property);
     }

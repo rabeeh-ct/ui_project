@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class LocationScreen extends StatefulWidget {
-  LocationScreen({Key? key}) : super(key: key);
+  LocationScreen({Key? key,required this.location}) : super(key: key);
+  List location;
 
   @override
   State<LocationScreen> createState() => _LocationScreenState();
@@ -10,16 +12,16 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   TextEditingController cityCtr = TextEditingController();
-
   TextEditingController localityCtr = TextEditingController();
-
   TextEditingController streetCtr = TextEditingController();
+  TextEditingController countryCtr = TextEditingController();
 
   @override
   void initState() {
-    cityCtr.text = 'Cochin';
-    localityCtr.text = 'Cochin';
-    streetCtr.text = 'Cochin';
+    countryCtr.text=widget.location[0];
+    cityCtr.text = widget.location[1];
+    localityCtr.text = widget.location[2];
+    streetCtr.text = widget.location[3];
     super.initState();
   }
 
@@ -104,9 +106,9 @@ class _LocationScreenState extends State<LocationScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size.width * .04),
             child: TextField(
+              controller: countryCtr,
               readOnly: true,
               decoration: InputDecoration(
-                  hintText: 'India',
                   border: InputBorder.none,
                   filled: true,
                   fillColor: Colors.grey),
@@ -184,7 +186,19 @@ class _LocationScreenState extends State<LocationScreen> {
             child: Container(
               height: size.height * .3,
               width: double.infinity,
-              decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/map.png'))),
+              child: GoogleMap(
+                myLocationEnabled: true,
+
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(widget.location[4],widget.location[5]),
+                  zoom: 11,
+                ),
+                mapType: MapType.normal,
+
+                // onMapCreated: (controller) {
+                //   _controller.complete(controller);
+                // },
+              ),
             ),
           ),
           SizedBox(
@@ -195,15 +209,15 @@ class _LocationScreenState extends State<LocationScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: size.width * .4,
-                  height: size.height * .055,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.indigo[900]!)),
-                  child: Center(
-                    child: InkWell(
-                      onTap: () => Navigator.pop(context),
+                InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    width: size.width * .4,
+                    height: size.height * .055,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.indigo[900]!)),
+                    child: Center(
                       child: Text(
                         'Back',
                         style: TextStyle(
