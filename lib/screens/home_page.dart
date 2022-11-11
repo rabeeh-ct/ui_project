@@ -16,12 +16,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isClicked = true;
   var isSelected;
+
   @override
   void initState() {
     Services.getData();
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,11 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       isClicked = true;
                       setState(() {});
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyScreen(),));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PropertyScreen(),
+                          ));
                     },
                     child: Container(
                       height: size.height * .045,
@@ -161,13 +165,14 @@ class _HomePageState extends State<HomePage> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: () {
-                          isSelected=index;
-                          setState(() {
-
-                          });
-                        },
-                          child: CardIndustrialLand(isSelected: isSelected,index: index,));
+                          onTap: () {
+                            isSelected = index;
+                            setState(() {});
+                          },
+                          child: CardIndustrialLand(
+                            isSelected: isSelected,
+                            index: index,
+                          ));
                     },
                     separatorBuilder: (context, index) =>
                         SizedBox(width: size.width * .03),
@@ -176,91 +181,98 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: size.height * .03),
             //Commercial office
-            Padding(
-              padding: EdgeInsets.only(left: size.width * .02),
-              child: Text(
-                'Commercial Office',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-            ),
-            Align(
-              alignment: Alignment(1, 0),
-              child: Padding(
-                padding: EdgeInsets.only(right: size.width * .03),
-                child: Text(
-                  'see all',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: Colors.black54),
-                ),
-              ),
-            ),
-            SizedBox(height: size.height*.02,),
-            SizedBox(height: size.height * .225,
-              width: double.infinity,
-              child: FutureBuilder(
-                future: Services.getData(),
-                builder: (context, snapshot) {
-                if(snapshot.connectionState==ConnectionState.waiting){
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      height: size.height * .225,
-                      width: size.width * .48,
-                      color: Colors.white,
+            ListView.separated(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: size.height * .01),
+                  child: SizedBox(
+                    width: size.width,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: size.width * .02),
+                          child: Align(
+                            alignment: AlignmentDirectional.topStart,
+                            child: Text(
+                              'Commercial Office',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment(1, 0),
+                          child: Padding(
+                            padding: EdgeInsets.only(right: size.width * .03),
+                            child: Text(
+                              'see all',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Colors.black54),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * .02,
+                        ),
+                        SizedBox(
+                          height: size.height * .225,
+                          width: double.infinity,
+                          child: FutureBuilder(
+                            future: Services.getData(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    height: size.height * .225,
+                                    width: size.width * .48,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error.toString());
+                              } else {
+                                return Container(
+                                  height: size.height * .225,
+                                  child: ListView.separated(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: size.width * .025),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder: (context, index) => OfficeCard(
+                                        images: snapshot.data[index].images
+                                            .toString(),
+                                        officeName:
+                                            snapshot.data[index].propertyType,
+                                        location:
+                                            snapshot.data[index].location),
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(
+                                      width: size.width * .02,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                }else if(snapshot.hasError){
-                  return Text(snapshot.error.toString());
-                }else{
-                  return Container(
-                    height: size.height * .225,
-                    child: ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: size.width*.025),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) => OfficeCard(images: snapshot.data[index].images.toString(),officeName: snapshot.data[index].propertyType,location: snapshot.data[index].location),
-                      separatorBuilder: (context, index) => SizedBox(width: size.width*.02,),
-                    ),
-                  );
-                }
-              },),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(height: size.height * .03);
+              },
+              itemCount: 3,
             ),
-            SizedBox(height: size.height * .03),
-            Padding(
-              padding: EdgeInsets.only(left: size.width * .02),
-              child: Text(
-                'Commercial Office',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-            ),
-            Align(
-              alignment: Alignment(1, 0),
-              child: Padding(
-                padding: EdgeInsets.only(right: size.width * .03),
-                child: Text(
-                  'see all',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: Colors.black54),
-                ),
-              ),
-            ),
-            SizedBox(height: size.height*.02,),
-            // Container(
-            //   height: size.height * .22,
-            //   child: ListView.separated(
-            //     padding: EdgeInsets.symmetric(horizontal: size.width*.025),
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: 3,
-            //     itemBuilder: (context, index) => OfficeCard(),
-            //     separatorBuilder: (context, index) => SizedBox(width: size.width*.02,),
-            //   ),
-            // ),
-
           ],
         ),
       ),
