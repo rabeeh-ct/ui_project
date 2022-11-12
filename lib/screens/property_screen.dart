@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:ui_project/services.dart';
 import 'package:ui_project/widgets/card_industral_land.dart';
 
 class PropertyScreen extends StatefulWidget {
-  PropertyScreen({Key? key}) : super(key: key);
+  PropertyScreen({Key? key,required List this.propertyType}) : super(key: key);
+  List propertyType;
 
   @override
   State<PropertyScreen> createState() => _PropertyScreenState();
@@ -112,7 +112,7 @@ class _PropertyScreenState extends State<PropertyScreen> {
                 width: double.infinity,
                 height: size.height * .37,
                 child: GridView.builder(
-                  itemCount: 9,
+                  itemCount: widget.propertyType.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4),
                   itemBuilder: (context, index) {
@@ -126,6 +126,7 @@ class _PropertyScreenState extends State<PropertyScreen> {
                             });
                           },
                           child: CardIndustrialLand(
+                            propertyType: widget.propertyType[index],
                             isSelected: isSelected,
                             index: index,
                           )),
@@ -175,6 +176,9 @@ class _PropertyScreenState extends State<PropertyScreen> {
                         value: "radio value",
                         groupValue: "trascationType",
                         onChanged: (value) {
+                          setState(() {
+
+                          });
                           print(value); //selected value
                         }),
                   ),
@@ -185,6 +189,9 @@ class _PropertyScreenState extends State<PropertyScreen> {
                         value: "radio value",
                         groupValue: "trascationType",
                         onChanged: (value) {
+                          setState(() {
+
+                          });
                           print(value); //selected value
                         }),
                   ),
@@ -195,6 +202,9 @@ class _PropertyScreenState extends State<PropertyScreen> {
                         value: "radio value",
                         groupValue: "trascationType",
                         onChanged: (value) {
+                          setState(() {
+
+                          });
                           print(value); //selected value
                         }),
                   ),
