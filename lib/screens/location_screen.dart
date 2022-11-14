@@ -188,16 +188,13 @@ class _LocationScreenState extends State<LocationScreen> {
               width: double.infinity,
               child: GoogleMap(
                 myLocationEnabled: true,
-
+                markers: {Marker(markerId: MarkerId('1'),position: LatLng(widget.location[4],widget.location[5]))},
                 initialCameraPosition: CameraPosition(
                   target: LatLng(widget.location[4],widget.location[5]),
                   zoom: 11,
                 ),
                 mapType: MapType.normal,
 
-                // onMapCreated: (controller) {
-                //   _controller.complete(controller);
-                // },
               ),
             ),
           ),
